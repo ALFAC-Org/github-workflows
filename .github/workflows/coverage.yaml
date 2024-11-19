@@ -90,6 +90,8 @@ jobs:
         uses: cicirello/jacoco-badge-generator@v2
         with:
           jacoco-csv-file:  ${{ inputs.jacoco_csv_file }}
+          generate-branches-badge: true
+          generate-coverage-badge: true
 
       - name: Check for modified files
         id: git-check
