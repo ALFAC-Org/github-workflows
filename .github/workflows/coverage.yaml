@@ -27,6 +27,11 @@ on:
         required: false
         default: "food-main/target/jacoco-report/jacoco.csv"
         type: string
+      test_command:
+        description: "Test command"
+        required: false
+        default: "mvn clean verify"
+        type: string
 
 jobs:
   coverage:
@@ -48,8 +53,8 @@ jobs:
           cache: "maven"
           # cache-dependency-path: 'sub-project/pom.xml' # optional
 
-      - name: Build and test with coverage
-        run: mvn clean verify
+      - name: Runs test
+        run: ${{ inputs.test_command }}
 
       # Para evitar erros com permissão de escrita
       # https://stackoverflow.com/a/75250838/3929980
