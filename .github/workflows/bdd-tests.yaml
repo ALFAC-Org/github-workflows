@@ -1,0 +1,68 @@
+name: BDD Tests
+
+on:
+  push:
+#  pull_request:
+  workflow_dispatch:
+    inputs:
+      start:
+        description: 'Start BDD Tests'
+        required: false
+        default: 'true'
+  workflow_call:
+    inputs:
+      application_port:
+        description: "Application port"
+        required: false
+        default: "8080"
+        type: string
+      cucumber_report_path:
+        description: "Path to the Cucumber report"
+        required: false
+        default: "target/cucumber-reports/cucumber.json"
+        type: string
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  execute-bdd-tests:
+    runs-on: ubuntu-latest
+    permissions: write-all
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Java JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: "temurin"
+          java-version: "17"
+          cache: "maven"
+
+      - name: Set up Docker Compose
+        run: sudo apt-get install docker-compose
+
+      - name: Build and start services
+        run: docker-compose up --build -d
+
+      - name: Wait for services to be ready
+        run: |
+          until [ "$(curl -s -o /dev/null -w ''%{http_code}'' http://localhost:${{ inputs.application_port}}/api/v1/health-check)" -eq 200 ]; do
+            echo "Waiting for the service to be ready..."
+            sleep 5
+          done
+
+      - name: Run BDD tests
+        run: mvn test -P bdd-tests
+
+      - name: Generate Cucumber report
+        uses: deblockt/cucumber-report-annotations-action@v1.7
+        with:
+          access-token: ${{ secrets.GITHUB_TOKEN }}
+          path: ${{ inputs.cucumber_report_path }}
+
+      - name: Stop and remove services
+        run: docker-compose down
