@@ -33,7 +33,7 @@ on:
         required: false
         default: "mvn clean verify"
         type: string
-      AWS_REGION:
+      aws_region:
         description: "AWS Region"
         required: false
         default: "us-east-1"
@@ -44,8 +44,8 @@ jobs:
     permissions: write-all
     runs-on: ubuntu-latest
     env:
-      AWS_REGION: ${{ inputs.AWS_REGION || 'us-east-1' }}
-      AWS_DEFAULT_REGION: ${{ inputs.AWS_REGION || 'us-east-1' }}
+      AWS_REGION: ${{ inputs.aws_region || 'us-east-1' }}
+      AWS_DEFAULT_REGION: ${{ inputs.aws_region || 'us-east-1' }}
 
     steps:
       - name: Checkout code
@@ -64,6 +64,9 @@ jobs:
 
       - name: Runs test
         run: ${{ inputs.test_command }}
+        env:
+          AWS_REGION: ${{ inputs.aws_region || 'us-east-1' }}
+          AWS_DEFAULT_REGION: ${{ inputs.aws_region || 'us-east-1' }}
 
       # Para evitar erros com permissão de escrita
       # https://stackoverflow.com/a/75250838/3929980
