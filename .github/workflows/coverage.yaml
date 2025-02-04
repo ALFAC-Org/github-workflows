@@ -12,6 +12,7 @@ on:
         required: false
         default: "17"
         type: string
+
       minimum_coverage:
         description: "Minimum coverage percentage"
         required: false
@@ -32,6 +33,14 @@ on:
         required: false
         default: "mvn clean verify"
         type: string
+      AWS_REGION:
+        description: "AWS Region"
+        required: false
+        default: "us-east-1"
+        type: string
+
+env:
+  AWS_REGION: ${{ inputs.AWS_REGION }}
 
 jobs:
   coverage:
