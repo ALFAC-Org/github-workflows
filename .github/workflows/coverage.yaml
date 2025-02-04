@@ -46,6 +46,8 @@ jobs:
   coverage:
     permissions: write-all
     runs-on: ubuntu-latest
+    env:
+      AWS_REGION: ${{ inputs.AWS_REGION }}
 
     steps:
       - name: Checkout code
