@@ -143,5 +143,5 @@ jobs:
         with:
           token: ${{ secrets.ALFAC_PUSH_TO_PROTECTED_BRANCH_TOKEN_CLASSIC }}
           force: true
-          unprotect_reviews: true
+          # unprotect_reviews: true
           debug: true
