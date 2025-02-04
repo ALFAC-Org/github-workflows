@@ -45,6 +45,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       AWS_REGION: ${{ inputs.AWS_REGION || 'us-east-1' }}
+      AWS_DEFAULT_REGION: ${{ inputs.AWS_REGION || 'us-east-1' }}
 
     steps:
       - name: Checkout code
@@ -63,8 +64,6 @@ jobs:
 
       - name: Runs test
         run: ${{ inputs.test_command }}
-        env:
-          AWS_REGION: ${{ inputs.AWS_REGION || 'us-east-1' }}
 
       # Para evitar erros com permissão de escrita
       # https://stackoverflow.com/a/75250838/3929980
